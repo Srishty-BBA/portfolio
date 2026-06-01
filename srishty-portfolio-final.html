@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Srishty — Finance & Valuation Analyst</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1612;--paper:#f4efe5;--cream:#ece6d8;
+  --rust:#8b3a2a;--gold:#9a7230;--sage:#3d5a47;
+  --muted:#7a7066;--border:#d4cec4;--dark:#0f0d0a;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Instrument Sans',sans-serif;font-size:15px;line-height:1.7;overflow-x:hidden;}
+
+/* SCROLL PROGRESS */
+#prog{position:fixed;top:0;left:0;height:2px;background:var(--rust);z-index:999;width:0;transition:width .08s linear;pointer-events:none;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 4rem;background:rgba(244,239,229,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--ink);text-decoration:none;}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--rust);}
+
+/* HAMBURGER */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--ink);transition:all .3s;}
+.hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+.mobile-menu{display:none;position:fixed;top:56px;left:0;right:0;background:rgba(244,239,229,0.98);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:1.5rem 2rem;flex-direction:column;gap:1.2rem;z-index:199;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:.5rem 0;border-bottom:1px solid var(--border);}
+.mobile-menu a:hover{color:var(--rust);}
+
+/* HERO */
+#hero{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr;padding-top:5rem;position:relative;overflow:hidden;}
+.hero-watermark{position:absolute;bottom:-8%;right:-4%;font-family:'Cormorant Garamond',serif;font-size:30vw;font-weight:600;color:rgba(139,58,42,.045);line-height:1;pointer-events:none;user-select:none;animation:waterDrift 18s ease-in-out infinite;}
+@keyframes waterDrift{0%,100%{transform:translateY(0) rotate(-2deg);}50%{transform:translateY(-2%) rotate(-1deg);}}
+
+.hero-left{padding:7rem 4rem 4rem;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border);position:relative;z-index:1;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:.8rem;display:flex;align-items:center;gap:.8rem;opacity:0;animation:riseIn .5s .1s forwards;}
+.hero-eyebrow::before{content:'';display:inline-block;width:2rem;height:1px;background:var(--rust);}
+.hero-name{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,5vw,4.5rem);font-weight:600;line-height:1.0;letter-spacing:-.01em;opacity:0;animation:riseIn .6s .22s forwards;}
+.hero-role{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:300;line-height:1.1;color:var(--rust);font-style:italic;opacity:0;animation:riseIn .6s .36s forwards;}
+.hero-sub{margin-top:1.4rem;color:var(--muted);max-width:40ch;font-size:.9rem;line-height:1.9;opacity:0;animation:riseIn .6s .5s forwards;}
+.hero-cta{margin-top:2.2rem;display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:riseIn .6s .62s forwards;}
+
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 2rem;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border:1px solid;transition:all .28s;position:relative;overflow:hidden;}
+.btn::after{content:'';position:absolute;left:-100%;top:0;bottom:0;width:100%;background:rgba(255,255,255,.12);transform:skewX(-20deg);transition:left .4s;}
+.btn:hover::after{left:150%;}
+.btn-dark{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.btn-dark:hover{background:var(--rust);border-color:var(--rust);}
+.btn-outline{background:transparent;color:var(--ink);border-color:var(--border);}
+.btn-outline:hover{border-color:var(--ink);}
+.btn-rust{background:var(--rust);color:var(--paper);border-color:var(--rust);}
+.btn-rust:hover{background:#a04535;border-color:#a04535;}
+
+.hero-right{padding:7rem 3.5rem 4rem;display:flex;flex-direction:column;justify-content:center;gap:1.1rem;opacity:0;animation:riseIn .8s .4s forwards;position:relative;z-index:1;}
+
+/* STAT CARDS */
+.hstat{padding:1.7rem 2rem;border:1px solid var(--border);background:rgba(255,255,255,.45);position:relative;overflow:hidden;cursor:default;transition:transform .35s cubic-bezier(.22,1,.36,1),border-color .3s,background .3s;}
+.hstat:hover{transform:translateX(-7px);border-color:var(--rust);background:rgba(255,255,255,.85);}
+.hstat-accent{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--rust);transform:scaleY(0);transform-origin:bottom;transition:transform .45s cubic-bezier(.22,1,.36,1);}
+.hstat:hover .hstat-accent{transform:scaleY(1);}
+.hstat-source{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+.hstat-num{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:600;color:var(--rust);line-height:1;transition:transform .3s cubic-bezier(.22,1,.36,1);}
+.hstat:hover .hstat-num{transform:scale(1.04);}
+.hstat-title{font-size:.85rem;font-weight:500;margin:.3rem 0 .35rem;}
+.hstat-desc{font-size:.76rem;color:var(--muted);line-height:1.55;}
+
+/* SECTIONS */
+.section{padding:7rem 4rem;}
+.section.cream{background:var(--cream);}
+.section.dark{background:var(--dark);color:var(--paper);}
+.slabel{font-family:'DM Mono',monospace;font-size:.67rem;letter-spacing:.18em;text-transform:uppercase;color:var(--rust);margin-bottom:.7rem;}
+.section.dark .slabel{color:var(--gold);}
+.stitle{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4vw,3rem);font-weight:300;line-height:1.1;margin-bottom:2.8rem;}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .75s ease,transform .75s ease;}
+.reveal.visible{opacity:1;transform:none;}
+.reveal-l{opacity:0;transform:translateX(-28px);transition:opacity .75s ease,transform .75s ease;}
+.reveal-l.visible{opacity:1;transform:none;}
+.reveal-r{opacity:0;transform:translateX(28px);transition:opacity .75s ease,transform .75s ease;}
+.reveal-r.visible{opacity:1;transform:none;}
+.d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}.d4{transition-delay:.4s;}
+
+/* ABOUT */
+#about .grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start;}
+.about-p{color:var(--muted);margin-bottom:1.1rem;font-size:.9rem;}
+.about-p strong{color:var(--ink);}
+.creds{display:flex;flex-direction:column;gap:.7rem;margin-top:1.5rem;}
+.cred{display:flex;gap:1rem;padding:1.2rem 1.4rem;border:1px solid var(--border);align-items:flex-start;transition:border-color .25s,transform .3s;}
+.cred:hover{border-color:var(--rust);transform:translateX(5px);}
+.cred-dot{width:7px;height:7px;border-radius:50%;background:var(--rust);margin-top:.55rem;flex-shrink:0;}
+.cred-dot.sage{background:var(--sage);}
+.cred-dot.gold{background:var(--gold);}
+.cred-main{font-size:.87rem;font-weight:500;}
+.cred-sub{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--muted);margin-top:.15rem;}
+
+/* DATA VIZ — moved early */
+#viz{background:var(--dark);color:var(--paper);padding:7rem 4rem;}
+#viz .slabel{color:var(--gold);}
+#viz .stitle{color:var(--paper);}
+.viz-intro{color:#908880;font-size:.88rem;max-width:52ch;margin-top:-.6rem;margin-bottom:3rem;line-height:1.85;}
+.viz-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:4rem;align-items:start;}
+.chart-ttl{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:1.4rem;}
+.brow{display:flex;align-items:center;gap:.8rem;margin-bottom:.9rem;}
+.bname{font-family:'DM Mono',monospace;font-size:.65rem;color:#908880;min-width:8.5rem;text-align:right;}
+.btrack{flex:1;height:28px;background:rgba(255,255,255,.05);overflow:hidden;}
+.bfill{height:100%;width:0;transition:width 1.3s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;justify-content:flex-end;padding-right:.5rem;}
+.bfill.r{background:var(--rust);}
+.bfill.g{background:var(--gold);}
+.bfill.s{background:var(--sage);}
+.bfill span{font-family:'DM Mono',monospace;font-size:.62rem;color:#f4efe5;white-space:nowrap;}
+.leg{display:flex;gap:1.5rem;margin-top:1.3rem;}
+.leg-i{display:flex;align-items:center;gap:.4rem;font-family:'DM Mono',monospace;font-size:.6rem;color:#908880;}
+.leg-dot{width:10px;height:10px;flex-shrink:0;}
+.finds{display:flex;flex-direction:column;gap:.9rem;}
+.find{padding:1.1rem 1.4rem;border:1px solid rgba(255,255,255,.07);border-left:3px solid var(--rust);}
+.find.g{border-left-color:var(--gold);}
+.find.s{border-left-color:var(--sage);}
+.find.m{border-left-color:#3a3028;}
+.find-n{font-family:'Cormorant Garamond',serif;font-size:1.85rem;font-weight:600;color:var(--rust);line-height:1;}
+.find.g .find-n{color:var(--gold);}
+.find.s .find-n{color:#5a9e6f;}
+.find.m .find-n{color:#504840;}
+.find-t{font-size:.82rem;font-weight:500;color:#d4c8b8;margin:.25rem 0 .2rem;}
+.find-d{font-size:.76rem;color:#908880;line-height:1.6;}
+
+/* SKILLS */
+.skills-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
+.scell{background:var(--paper);padding:2rem 1.8rem;transition:background .25s;}
+.scell:hover{background:#fff;}
+.section.cream .scell{background:var(--cream);}
+.section.cream .scell:hover{background:#fff;}
+.sarea{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin-bottom:.9rem;}
+.stags{display:flex;flex-wrap:wrap;gap:.35rem;}
+.stag{font-size:.74rem;padding:.28rem .65rem;border:1px solid var(--border);color:var(--muted);transition:all .2s;cursor:default;}
+.stag:hover{border-color:var(--rust);color:var(--rust);}
+
+/* PROJECTS */
+.proj-list{margin-top:2.5rem;}
+.proj{display:grid;grid-template-columns:70px 1fr;border-top:1px solid var(--border);transition:background .25s;cursor:pointer;}
+.proj:last-child{border-bottom:1px solid var(--border);}
+.proj:hover{background:rgba(255,255,255,.6);}
+.proj-num{padding:3rem 1.5rem;font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;color:var(--border);line-height:1;transition:color .3s;}
+.proj:hover .proj-num,.proj.open .proj-num{color:var(--rust);}
+.proj-body{padding:3rem 4rem 3rem 1.5rem;border-left:1px solid var(--border);}
+.proj-tag{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.proj-title{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:400;line-height:1.2;margin-bottom:.8rem;}
+.proj-desc{font-size:.85rem;color:var(--muted);line-height:1.75;max-width:65ch;}
+.proj-mets{display:flex;gap:.7rem;margin-top:1.3rem;flex-wrap:wrap;}
+.pmet{padding:.6rem 1rem;border:1px solid var(--border);background:var(--cream);}
+.pmet-v{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--rust);line-height:1;}
+.pmet-k{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.15rem;}
+.proj-toggle{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--rust);background:none;border:none;cursor:pointer;margin-top:1rem;display:flex;align-items:center;gap:.4rem;padding:0;}
+.proj-arrow{display:inline-block;transition:transform .3s;}
+.proj.open .proj-arrow{transform:rotate(90deg);}
+.proj-expand{max-height:0;overflow:hidden;transition:max-height .55s cubic-bezier(.22,1,.36,1);}
+.proj-expand.show{max-height:500px;}
+.proj-insight{padding:1.2rem 1.5rem;background:rgba(139,58,42,.06);border-left:3px solid var(--rust);margin-top:.8rem;font-size:.82rem;color:var(--muted);line-height:1.75;}
+.proj-insight strong{color:var(--ink);}
+
+/* EXPERIENCE */
+#experience .grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;}
+.timeline{position:relative;padding-left:2rem;}
+.timeline::before{content:'';position:absolute;left:0;top:.5rem;bottom:0;width:1px;background:var(--border);}
+.titem{position:relative;padding-bottom:2.4rem;}
+.titem::before{content:'';position:absolute;left:-2rem;top:.55rem;width:9px;height:9px;border-radius:50%;background:var(--paper);border:1.5px solid var(--border);transform:translateX(-4px);transition:background .3s,border-color .3s;}
+.titem:hover::before{background:var(--rust);border-color:var(--rust);}
+.tperiod{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;color:var(--gold);margin-bottom:.25rem;}
+.trole{font-size:.95rem;font-weight:500;margin-bottom:.15rem;}
+.torg{font-size:.8rem;color:var(--muted);margin-bottom:.6rem;}
+.tbuls{list-style:none;}
+.tbuls li{font-size:.8rem;color:var(--muted);padding:.2rem 0 .2rem 1rem;position:relative;line-height:1.6;}
+.tbuls li::before{content:'→';position:absolute;left:0;color:var(--rust);font-size:.68rem;}
+.cert-list{display:flex;flex-direction:column;gap:.55rem;}
+.cert{display:flex;align-items:center;gap:.8rem;padding:.85rem 1.1rem;border:1px solid var(--border);font-size:.82rem;color:var(--muted);transition:border-color .2s,transform .25s;}
+.cert:hover{border-color:var(--sage);transform:translateX(5px);}
+.cert-ck{color:var(--sage);font-size:.82rem;flex-shrink:0;}
+
+/* CONTACT */
+#contact{background:var(--ink);color:var(--paper);padding:8rem 4rem;text-align:center;}
+#contact .slabel{color:var(--gold);}
+.contact-name{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;line-height:1;margin-bottom:.5rem;color:var(--paper);}
+.contact-name em{font-style:italic;color:var(--rust);}
+.contact-role{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:#5a5048;margin-bottom:1rem;}
+.contact-sub{color:#908880;margin:.8rem auto 0;max-width:42ch;font-size:.88rem;line-height:1.85;}
+.clinks{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2.5rem;}
+.clink{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:.9rem 2rem;border:1px solid;text-decoration:none;transition:all .28s;}
+.clink.r{background:var(--rust);color:var(--paper);border-color:var(--rust);}
+.clink.r:hover{background:#a04535;border-color:#a04535;}
+.clink.g{background:transparent;color:#908880;border-color:#2a241c;}
+.clink.g:hover{border-color:#908880;color:var(--paper);}
+
+footer{background:var(--ink);border-top:1px solid #1c1710;padding:1.4rem 4rem;display:flex;justify-content:space-between;}
+footer span{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#332d24;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  #hero{grid-template-columns:1fr;}
+  .hero-left{border-right:none;border-bottom:1px solid var(--border);padding:6rem 1.5rem 3rem;}
+  .hero-right{padding:3rem 1.5rem;}
+  .section{padding:4rem 1.5rem;}
+  #about .grid,#experience .grid,.viz-grid{grid-template-columns:1fr;gap:2.5rem;}
+  .skills-wrap{grid-template-columns:1fr 1fr;}
+  .proj-body{padding:2rem 1.5rem;}
+  #viz{padding:4rem 1.5rem;}
+  #contact{padding:5rem 1.5rem;}
+  footer{flex-direction:column;gap:.4rem;padding:1.2rem 1.5rem;}
+  .hero-watermark{font-size:50vw;}
+}
+@media(max-width:540px){
+  .skills-wrap{grid-template-columns:1fr;}
+  .proj{grid-template-columns:1fr;}
+  .proj-num{display:none;}
+  .proj-body{border-left:none;padding:2rem 1.5rem;}
+  .clinks{flex-direction:column;align-items:center;}
+}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Srishty</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#viz">Data</a></li>
+    <li><a href="#projects">Research</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#viz" onclick="closeMenu()">Data</a>
+  <a href="#projects" onclick="closeMenu()">Research</a>
+  <a href="#experience" onclick="closeMenu()">Experience</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-watermark">₹</div>
+  <div class="hero-left">
+    <p class="hero-eyebrow">CA Intermediate &nbsp;·&nbsp; BBA Finance &nbsp;·&nbsp; IGDTUW · Delhi</p>
+    <h1 class="hero-name">Srishty</h1>
+    <p class="hero-role">Finance Analyst &amp; Researcher</p>
+    <p class="hero-sub">I build ESG-integrated valuation models, run OLS regressions on Indian corporate panel data, and flag real compliance gaps as an internal auditor — all while pursuing CA Intermediate at ICAI.</p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-dark">View Research ↓</a>
+      <a href="https://drive.google.com/your-resume-link" target="_blank" class="btn btn-rust">Download Resume ↓</a>
+      <a href="mailto:dixitsrishty@gmail.com" class="btn btn-outline">Get in Touch</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hstat">
+      <div class="hstat-accent"></div>
+      <div class="hstat-source">Key Outcome — ESG Valuation Internship, Crafix Advisory</div>
+      <div class="hstat-num">99 bps</div>
+      <div class="hstat-title">WACC Reduction Quantified</div>
+      <div class="hstat-desc">By integrating ESG risk profiles into 3-stage DCF models, high-performing firms showed a 99 basis-point drop in cost of capital — translating to a 9–19% uplift in intrinsic value.</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-accent"></div>
+      <div class="hstat-source">Key Result — Major Research Project, BBA Final Year, IGDTUW</div>
+      <div class="hstat-num">79.8%</div>
+      <div class="hstat-title">CSR Variance Explained by Profit Alone</div>
+      <div class="hstat-desc">OLS panel regression across 11 Indian IT firms (FY2019–25). The PAT coefficient of 0.023 is statistically indistinguishable from the 2% legal mandate — proving CSR is formula, not conscience.</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-accent"></div>
+      <div class="hstat-source">Key Outcome — EV Sector Portfolio Study, 2026</div>
+      <div class="hstat-num">−8% σ</div>
+      <div class="hstat-title">Portfolio Volatility Reduced</div>
+      <div class="hstat-desc">Modelled VaR for a ₹10M portfolio at 95% confidence using historical simulation. Strategic beta-weighting and stress-testing cut portfolio volatility by 8%.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="section cream">
+  <div class="grid">
+    <div class="reveal reveal-l">
+      <p class="slabel">01 — About</p>
+      <h2 class="stitle">Where numbers<br>tell a story</h2>
+      <p class="about-p">I'm a <strong>BBA Finance student at IGDTUW (2023–26)</strong> and <strong>CA Intermediate candidate at ICAI</strong> — Foundation cleared, Inter appeared, result awaited. CGPA 7.9/10.</p>
+      <p class="about-p">My work lives at the intersection of <strong>financial rigour and strategic curiosity</strong>. I've built DCF models that price in ESG risk, run regression on 6-year panel data from Indian IT firms, and audited an NBFC for real RBI compliance gaps.</p>
+      <p class="about-p">I'm drawn to questions that don't have obvious answers — like whether CSR in Indian IT reflects genuine conscience or compliance mechanics. Spoiler: it's mostly compliance, and I have the p-values to prove it.</p>
+    </div>
+    <div class="reveal reveal-r d2">
+      <p class="slabel" style="margin-bottom:1.2rem;">Education & Qualifications</p>
+      <div class="creds">
+        <div class="cred"><div class="cred-dot"></div><div><div class="cred-main">Chartered Accountancy — CA Inter</div><div class="cred-sub">ICAI · Foundation Cleared · Inter Appeared (Result Awaited)</div></div></div>
+        <div class="cred"><div class="cred-dot"></div><div><div class="cred-main">BBA — Finance, IGDTUW</div><div class="cred-sub">2023–2026 · CGPA 7.9 / 10</div></div></div>
+        <div class="cred"><div class="cred-dot sage"></div><div><div class="cred-main">AI for Investments · Financial Modeling & Valuation</div><div class="cred-sub">Certified · Advanced MS Excel · Microsoft Excel for Business</div></div></div>
+        <div class="cred"><div class="cred-dot gold"></div><div><div class="cred-main">Languages</div><div class="cred-sub">English & Hindi — Professional Proficiency</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DATA VIZ — moved up, right after About -->
+<section id="viz">
+  <div class="reveal">
+    <p class="slabel">02 — From the MRP Dataset</p>
+    <h2 class="stitle">CSR vs. Net Profit<br>in Indian IT — FY2025</h2>
+    <p class="viz-intro">The bars below show CSR spend across the study sample. Notice how spend tracks almost perfectly with firm size and profit — the visual proof of the r = 0.88 correlation found in the Major Research Project.</p>
+  </div>
+  <div class="viz-grid">
+    <div class="reveal reveal-l d1">
+      <p class="chart-ttl">CSR Expenditure — FY2025 (₹ Crore)</p>
+      <div id="barChart">
+        <div class="brow"><span class="bname">TCS</span><div class="btrack"><div class="bfill r" data-w="100"><span>₹827 Cr</span></div></div></div>
+        <div class="brow"><span class="bname">Infosys</span><div class="btrack"><div class="bfill r" data-w="47"><span>₹392 Cr</span></div></div></div>
+        <div class="brow"><span class="bname">HCL Technologies</span><div class="btrack"><div class="bfill g" data-w="26"><span>₹217 Cr</span></div></div></div>
+        <div class="brow"><span class="bname">Wipro</span><div class="btrack"><div class="bfill g" data-w="27"><span>₹222 Cr</span></div></div></div>
+        <div class="brow"><span class="bname">Tech Mahindra</span><div class="btrack"><div class="bfill g" data-w="14"><span>₹119 Cr</span></div></div></div>
+        <div class="brow"><span class="bname">Persistent Systems</span><div class="btrack"><div class="bfill s" data-w="14"><span>₹116 Cr</span></div></div></div>
+        <div class="brow"><span class="bname">Tata Elxsi</span><div class="btrack"><div class="bfill s" data-w="6.3"><span>₹52 Cr</span></div></div></div>
+        <div class="brow"><span class="bname">Mphasis</span><div class="btrack"><div class="bfill s" data-w="4.4"><span>₹36 Cr</span></div></div></div>
+      </div>
+      <div class="leg">
+        <span class="leg-i"><span class="leg-dot" style="background:var(--rust);"></span>Large-Cap</span>
+        <span class="leg-i"><span class="leg-dot" style="background:var(--gold);"></span>Large-Cap (mid)</span>
+        <span class="leg-i"><span class="leg-dot" style="background:var(--sage);"></span>Mid-Cap</span>
+      </div>
+    </div>
+    <div class="finds reveal reveal-r d2">
+      <div class="find"><div class="find-n">r = 0.88</div><div class="find-t">CSR Spend ↔ Net Profit (PAT)</div><div class="find-d">As profits rise, CSR follows almost mechanically. The bigger the firm, the more it spends — always in proportion to earnings.</div></div>
+      <div class="find g"><div class="find-n">r = 0.99</div><div class="find-t">2% Mandate ↔ PAT</div><div class="find-d">Near-perfect. The legal formula essentially IS PAT. Mathematical proof that the mandate — not altruism — drives spend.</div></div>
+      <div class="find s"><div class="find-n">1.72–2.19%</div><div class="find-t">TCS CSR-to-PAT Band (5 years)</div><div class="find-d">The narrowest range of any firm. TCS treats 2% as a financial formula — compliance executed as a science, year over year.</div></div>
+      <div class="find m"><div class="find-n">~20%</div><div class="find-t">Where genuine intent lives</div><div class="find-d">The ~20% of CSR variance unexplained by financials is the only space where real corporate conscience — or its absence — shows up.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="section cream">
+  <div class="reveal">
+    <p class="slabel">03 — Competencies</p>
+    <h2 class="stitle">What I bring to the table</h2>
+  </div>
+  <div class="skills-wrap reveal d1">
+    <div class="scell"><div class="sarea">Valuation</div><div class="stags"><span class="stag">3-Stage DCF</span><span class="stag">WACC</span><span class="stag">ESG Integration</span><span class="stag">CCA</span><span class="stag">Precedent Trans.</span><span class="stag">Sensitivity Analysis</span></div></div>
+    <div class="scell"><div class="sarea">Research Methods</div><div class="stags"><span class="stag">OLS Regression</span><span class="stag">Panel Data</span><span class="stag">Pearson Correlation</span><span class="stag">Horizontal Analysis</span><span class="stag">Ratio Benchmarking</span></div></div>
+    <div class="scell"><div class="sarea">Risk & Portfolio</div><div class="stags"><span class="stag">VaR Modelling</span><span class="stag">Beta-Weighting</span><span class="stag">Stress-Testing</span><span class="stag">Capital Budgeting</span><span class="stag">Due Diligence</span></div></div>
+    <div class="scell"><div class="sarea">Audit & Compliance</div><div class="stags"><span class="stag">Internal Controls</span><span class="stag">RBI / NBFC-KYC</span><span class="stag">AML / CFT</span><span class="stag">GST</span><span class="stag">Income Tax</span><span class="stag">SAs</span></div></div>
+    <div class="scell"><div class="sarea">Tools & Data</div><div class="stags"><span class="stag">Advanced Excel</span><span class="stag">Pivot Tables</span><span class="stag">CMIE ProwessIQ</span><span class="stag">Screener.in</span><span class="stag">BSE Portal</span><span class="stag">PowerPoint</span></div></div>
+    <div class="scell"><div class="sarea">Domain Knowledge</div><div class="stags"><span class="stag">ESG Finance</span><span class="stag">Corporate Governance</span><span class="stag">NBFC Regulation</span><span class="stag">IT Sector</span><span class="stag">EV / Auto Sector</span></div></div>
+  </div>
+</section>
+
+<!-- PROJECTS — CSR project now included as card #1 -->
+<section id="projects" class="section" style="padding-left:0;padding-right:0;">
+  <div style="padding:0 4rem;" class="reveal">
+    <p class="slabel">04 — Research & Projects</p>
+    <h2 class="stitle">Selected work <em style="color:var(--rust);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:inherit;font-weight:300;">— tap to expand</em></h2>
+  </div>
+  <div class="proj-list">
+
+    <!-- PROJECT 1: CSR MRP — most impressive, leads -->
+    <div class="proj reveal" onclick="toggleP(this)">
+      <div class="proj-num">01</div>
+      <div class="proj-body">
+        <div class="proj-tag">Major Research Project · BBA 6th Sem · IGDTUW · Guided by Dr. Ankush Goyal</div>
+        <div class="proj-title">CSR Expenditure & Financial Performance — Evidence from the Indian IT Sector</div>
+        <div class="proj-desc">Panel data study (FY2019–25) across 11 Indian IT firms using OLS regression. Tested whether mandatory CSR under Section 135 of the Companies Act, 2013 reflects genuine corporate conscience or mechanically calibrated compliance. Applied Slack Resources Theory (Bourgeois, 1981) and Institutional Theory (DiMaggio & Powell, 1983) to India's first-of-its-kind mandatory CSR framework.</div>
+        <div class="proj-mets">
+          <div class="pmet"><div class="pmet-v">79.8%</div><div class="pmet-k">Adj. R²</div></div>
+          <div class="pmet"><div class="pmet-v">0.023</div><div class="pmet-k">PAT Coefficient</div></div>
+          <div class="pmet"><div class="pmet-v">p &lt; .001</div><div class="pmet-k">Significance</div></div>
+          <div class="pmet"><div class="pmet-v">11 firms</div><div class="pmet-k">Sample</div></div>
+          <div class="pmet"><div class="pmet-v">55 obs.</div><div class="pmet-k">Regression n</div></div>
+          <div class="pmet"><div class="pmet-v">FY19–25</div><div class="pmet-k">Time Period</div></div>
+        </div>
+        <button class="proj-toggle">Key finding <span class="proj-arrow">›</span></button>
+        <div class="proj-expand">
+          <div class="proj-insight"><strong>The verdict:</strong> In the Indian IT sector, CSR expenditure is primarily a mathematical function of Net Profit After Tax — not voluntary conscience. The PAT coefficient of 0.023 is statistically indistinguishable from the 2% statutory threshold. TCS maintains its CSR-to-PAT ratio in a tight 1.72%–2.19% band across 5 years. Only the unexplained ~20% of variance is where genuine corporate intent lives — and that is where analysts should focus.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 2 -->
+    <div class="proj reveal d1" onclick="toggleP(this)">
+      <div class="proj-num">02</div>
+      <div class="proj-body">
+        <div class="proj-tag">Summer Internship Project · Crafix Advisory · Jun–Aug 2025</div>
+        <div class="proj-title">ESG Factors in Corporate Valuation — Risk-Adjusted DCF Framework</div>
+        <div class="proj-desc">Developed 3-stage DCF models for early-stage firms integrating ESG risk profiles to quantify the cost-of-capital impact on investment targets. Executed ratio benchmarking and financial statement analysis identifying liquidity risks and profitability trends. Built automated Excel models to streamline client-ready reporting.</div>
+        <div class="proj-mets">
+          <div class="pmet"><div class="pmet-v">99 bps</div><div class="pmet-k">WACC Reduction</div></div>
+          <div class="pmet"><div class="pmet-v">14.3%</div><div class="pmet-k">Market Premium</div></div>
+          <div class="pmet"><div class="pmet-v">9–19%</div><div class="pmet-k">Value Uplift</div></div>
+        </div>
+        <button class="proj-toggle">Key finding <span class="proj-arrow">›</span></button>
+        <div class="proj-expand">
+          <div class="proj-insight"><strong>What 99 bps actually means:</strong> A firm with ₹500 Cr EBIT and a WACC dropping from 12% to 11% sees its terminal value rise by roughly 9–11%. For ESG-leading firms, the market was already pricing in a 14.3% premium — validating ESG integration as a valuation necessity, not a nice-to-have.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 3 -->
+    <div class="proj reveal d2" onclick="toggleP(this)">
+      <div class="proj-num">03</div>
+      <div class="proj-body">
+        <div class="proj-tag">Portfolio Optimisation Study · 2026 · EV & Auto Ancillary Sector</div>
+        <div class="proj-title">Peer Benchmarking & Portfolio Risk — EV & Auto Ancillary Deep-Dive</div>
+        <div class="proj-desc">Classified 20+ firms into Leads, Stables, and Laggards using ratio benchmarking. Identified a striking 115-day DSO gap across firms and recommended credit policy standardisation. Modelled VaR for a ₹10M portfolio at 95% confidence using historical simulation, reducing volatility 8% through strategic beta-weighting and interest rate stress-testing.</div>
+        <div class="proj-mets">
+          <div class="pmet"><div class="pmet-v">20+</div><div class="pmet-k">Firms Analysed</div></div>
+          <div class="pmet"><div class="pmet-v">95%</div><div class="pmet-k">VaR Confidence</div></div>
+          <div class="pmet"><div class="pmet-v">−8% σ</div><div class="pmet-k">Volatility Cut</div></div>
+          <div class="pmet"><div class="pmet-v">35 vs 150</div><div class="pmet-k">DSO Gap (days)</div></div>
+        </div>
+        <button class="proj-toggle">Key finding <span class="proj-arrow">›</span></button>
+        <div class="proj-expand">
+          <div class="proj-insight"><strong>The DSO gap decoded:</strong> A 115-day gap between best and worst performers in the same sector signals fundamentally different credit cultures. Laggard firms are effectively financing their customers' working capital for an extra quarter. Standardising credit policy and digitising supply chains could unlock significant liquidity without any capital raise.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 4 -->
+    <div class="proj reveal d3" onclick="toggleP(this)">
+      <div class="proj-num">04</div>
+      <div class="proj-body">
+        <div class="proj-tag">Quantitative Study · AI Adoption & Corporate Finance · TCS</div>
+        <div class="proj-title">AI in Corporate Finance — 12-Year Longitudinal Analysis on TCS</div>
+        <div class="proj-desc">Executed 12-year horizontal analysis to isolate AI adoption's measurable impact on EBITDA growth at TCS — controlling for revenue cycles and headcount changes. Engineered predictive models to forecast Net Profit and Equity under multiple digital transformation scenarios.</div>
+        <div class="proj-mets">
+          <div class="pmet"><div class="pmet-v">12 yrs</div><div class="pmet-k">Longitudinal Scope</div></div>
+          <div class="pmet"><div class="pmet-v">EBITDA</div><div class="pmet-k">Primary KPI</div></div>
+          <div class="pmet"><div class="pmet-v">3 scenarios</div><div class="pmet-k">Forecast Models</div></div>
+        </div>
+        <button class="proj-toggle">Key finding <span class="proj-arrow">›</span></button>
+        <div class="proj-expand">
+          <div class="proj-insight"><strong>Why this is hard to do right:</strong> Isolating AI's financial impact requires controlling for organic revenue growth, headcount efficiency, and sector tailwinds. By running 12 years of horizontal analysis and stress-testing across 3 transformation scenarios, this study builds a replicable framework for evaluating technology investment returns in services companies.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="section cream">
+  <p class="slabel reveal">05 — Experience</p>
+  <h2 class="stitle reveal">Where I've worked</h2>
+  <div class="grid">
+    <div class="timeline reveal reveal-l">
+      <div class="titem">
+        <div class="tperiod">Feb 2026</div>
+        <div class="trole">Internal Auditor — Audit Engagement</div>
+        <div class="torg">NBFC Client via CA Firm</div>
+        <ul class="tbuls">
+          <li>Tested loan sanction workflows against RBI guidelines — found CIBIL score breaches, KYC gaps, LOS data integrity failures (duplicate Lead IDs, incorrect Reloan flags)</li>
+          <li>Flagged AML/CFT non-compliance: absence of sanctions screening at onboarding, in breach of RBI (NBFC-KYC) Directions, 2025</li>
+          <li>Reported findings with formal annexures and remediation recommendations</li>
+        </ul>
+      </div>
+      <div class="titem">
+        <div class="tperiod">Jun 2025 – Aug 2025</div>
+        <div class="trole">Financial & Strategic Intern</div>
+        <div class="torg">Crafix Advisory</div>
+        <ul class="tbuls">
+          <li>Developed 3-stage DCF models integrating ESG risk profiles to quantify WACC impact for investment targets</li>
+          <li>Executed ratio benchmarking and financial statement analysis identifying liquidity risks and profitability trends</li>
+          <li>Architected automated Excel models, reducing manual data entry and streamlining client-ready reporting</li>
+        </ul>
+      </div>
+      <div class="titem">
+        <div class="tperiod">Nov 2024 – Jan 2025</div>
+        <div class="trole">Business Development Intern</div>
+        <div class="torg">Zotik</div>
+        <ul class="tbuls">
+          <li>Achieved 20% increase in client engagement through targeted market assessments and process optimisation</li>
+        </ul>
+      </div>
+    </div>
+    <div class="reveal reveal-r d2">
+      <p class="slabel" style="margin-bottom:1rem;">Certifications</p>
+      <div class="cert-list" style="margin-bottom:2.2rem;">
+        <div class="cert"><span class="cert-ck">✓</span>AI for Investments</div>
+        <div class="cert"><span class="cert-ck">✓</span>Financial Modeling & Valuation</div>
+        <div class="cert"><span class="cert-ck">✓</span>Microsoft Excel for Business</div>
+        <div class="cert"><span class="cert-ck">✓</span>Advanced MS Excel</div>
+      </div>
+      <p class="slabel" style="margin-bottom:1rem;">Data Sources Worked With</p>
+      <div class="cert-list">
+        <div class="cert"><span class="cert-ck">→</span>CMIE ProwessIQ</div>
+        <div class="cert"><span class="cert-ck">→</span>Screener.in</div>
+        <div class="cert"><span class="cert-ck">→</span>BSE Corporate Portal</div>
+        <div class="cert"><span class="cert-ck">→</span>Audited Annual Reports & BRSR Filings</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT — with full name as headline -->
+<section id="contact">
+  <div class="reveal">
+    <p class="slabel">06 — Let's Connect</p>
+    <h2 class="contact-name">Srishty</h2>
+    <p class="contact-role">Finance Analyst &nbsp;·&nbsp; CA Intermediate &nbsp;·&nbsp; IGDTUW · Delhi</p>
+    <p class="contact-sub">Open to internships, CA articleship, research collaborations, and finance analyst roles.</p>
+    <div class="clinks">
+      <a href="mailto:dixitsrishty@gmail.com" class="clink r">dixitsrishty@gmail.com</a>
+      <a href="https://www.linkedin.com/in/srishtydixit189101309" target="_blank" class="clink g">LinkedIn →</a>
+      <a href="tel:+919289242784" class="clink g">+91 92892 42784</a>
+      <a href="https://drive.google.com/your-resume-link" target="_blank" class="clink g">Download Resume ↓</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Srishty · Finance & Valuation · Delhi, India</span>
+  <span>BBA Finance · IGDTUW · CA Inter · ICAI · 2026</span>
+</footer>
+
+<script>
+// Scroll progress
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('prog').style.width=Math.min(p,100)+'%';
+});
+
+// Reveal on scroll
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('visible'),i*80);
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:0.07});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>io.observe(el));
+
+// Bar chart
+const barIO=new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting){
+    document.querySelectorAll('.bfill').forEach((b,i)=>{
+      setTimeout(()=>{b.style.width=b.dataset.w+'%';},i*130);
+    });
+    barIO.disconnect();
+  }
+},{threshold:0.2});
+const bc=document.getElementById('barChart');
+if(bc) barIO.observe(bc);
+
+// Project accordion
+function toggleP(el){
+  const wasOpen=el.classList.contains('open');
+  document.querySelectorAll('.proj.open').forEach(p=>{
+    p.classList.remove('open');
+    p.querySelector('.proj-expand').classList.remove('show');
+  });
+  if(!wasOpen){
+    el.classList.add('open');
+    el.querySelector('.proj-expand').classList.add('show');
+  }
+}
+
+// Hamburger
+const ham=document.getElementById('hamburger');
+const mob=document.getElementById('mobileMenu');
+ham.addEventListener('click',()=>{
+  ham.classList.toggle('open');
+  mob.classList.toggle('open');
+});
+function closeMenu(){
+  ham.classList.remove('open');
+  mob.classList.remove('open');
+}
+</script>
+</body>
+</html>
